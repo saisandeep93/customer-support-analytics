@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from dotenv import load_dotenv
 import anthropic
+from observability import log_interaction
 
 load_dotenv()
 
@@ -233,6 +234,7 @@ def test_master_router():
         print(f"{'─'*60}")
 
         result = route_query(test["query"], mobile)
+        log_interaction(test["query"], mobile, result)
 
         print(f"TIER:       {result['tier'].upper()}")
         print(f"ROUTED TO:  {result['routed_to']}")
