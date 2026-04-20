@@ -252,5 +252,29 @@ def test_all_queries():
               f"Rate: {row['resolution_rate_pct']}% | "
               f"Avg Score: {row['avg_feedback_score']}")
 
+def get_recent_orders(mobile_number: str, limit: int = 5) -> list:
+    """Get most recent orders for a customer.
+    Used by agent when customer doesn't provide order ID."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    orders = cursor.execute('''
+        SELECT 
+            o.order_id,
+            o.order_timestamp,
+            o.total_amount,
+            o.order_status,
+            COUNT(oli.line_item_id) as item_count
+        FROM orders o
+        LEFT JOIN order_line_items oli ON o.order_id = oli.order_id
+        WHERE o.mobile_number = ?
+        GROUP BY o.order_id
+        ORDER BY o.order_timestamp DESC
+        LIMIT ?
+    ''', (mobile_number, limit)).fetchall()
+    
+    conn.close()
+    return [dict(o) for o in orders]
+
 if __name__ == "__main__":
     test_all_queries()
