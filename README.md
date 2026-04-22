@@ -96,6 +96,22 @@ A Streamlit dashboard with six panels: system overview (north star metrics), rou
 | Language | Python 3.11 |
 
 ---
+## Two Implementation Approaches
+
+Each core component is implemented twice — once from primitives 
+to demonstrate understanding of the mechanics, once using 
+industry-standard frameworks for production readiness.
+
+| Component | Primitive | Framework |
+|---|---|---|
+| RAG Pipeline | `src/rag_pipeline.py` | `src/langchain_rag.py` |
+| Agent | `src/agent.py` | `src/langgraph_agent.py` |
+
+The primitive implementations use direct Anthropic SDK calls, 
+manual ChromaDB integration, and a hand-written ReAct loop. 
+The framework implementations use LangChain LCEL chains, 
+LangGraph's create_react_agent, and the @tool decorator pattern.
+
 
 ## Key Design Decisions
 
